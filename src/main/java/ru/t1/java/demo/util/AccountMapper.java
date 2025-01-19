@@ -12,7 +12,7 @@ public class AccountMapper {
                 .accountType(accountDto.getAccountType())
                 .balance(accountDto.getBalance())
                 .build();
-    };
+    }
 
     public static AccountDto toDto(Account account) {
         return AccountDto.builder()
@@ -21,5 +21,5 @@ public class AccountMapper {
                 .accountType(account.getAccountType())
                 .balance(account.getBalance())
                 .build();
-    };
+    }
 }

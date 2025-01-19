@@ -1,7 +1,7 @@
 -- liquibase formatted sql
 
 CREATE TABLE client (
-  id BIGINT NOT NULL,
+   id BIGSERIAL,
    first_name VARCHAR,
    last_name VARCHAR,
    middle_name VARCHAR,
