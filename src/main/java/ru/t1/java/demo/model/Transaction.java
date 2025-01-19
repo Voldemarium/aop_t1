@@ -2,11 +2,12 @@ package ru.t1.java.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -15,14 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "transaction")
-public class Transaction extends AbstractPersistable<Long> {
-//    @ManyToOne(fetch = FetchType.LAZY)
+public class Transaction extends AbstractEntity<Long> {
     @JoinColumn(name = "account_id")
-//    private Account account;
     private Long account_id;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column(name = "amount", precision = 19, scale = 2)
+    private BigDecimal amount;
 
     @Column(name = "transaction_time")
     private LocalDateTime transactionTime;
