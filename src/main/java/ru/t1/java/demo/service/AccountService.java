@@ -4,6 +4,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.aop.annotations.LogDataSourceError;
 import ru.t1.java.demo.dto.AccountDto;
 import ru.t1.java.demo.model.Account;
 import ru.t1.java.demo.repository.AccountRepository;
@@ -30,21 +31,13 @@ public class AccountService {
         if (cache.containsKey(id)) {
             return AccountMapper.toDto(cache.get(id));
         }
-
-        try {
-            Account entity = repository.findById(id).get();
-            accountDto = AccountMapper.toDto(entity);
-            cache.put(id, entity);
-        } catch (Exception e) {
-            log.error("Error: ", e);
-//            throw new ClientException();
-        }
-
-//        log.debug("Client info: {}", clientDto.toString());
+        Account entity = repository.findById(id).get();
+        accountDto = AccountMapper.toDto(entity);
+        cache.put(id, entity);
         return accountDto;
     }
 
-
+    @LogDataSourceError
     public void deleteAccountById(Long id) {
         repository.deleteById(id);
     }

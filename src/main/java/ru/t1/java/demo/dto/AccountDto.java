@@ -20,7 +20,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccountDto implements Serializable {
     @JsonProperty("id")
-    private Integer id;
+    private Long id;
     @JsonProperty("client_id")
     private Long client_id;
     @JsonProperty("account_id")

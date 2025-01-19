@@ -1,9 +1,7 @@
 package ru.t1.java.demo.util;
 
 import org.springframework.stereotype.Component;
-import ru.t1.java.demo.dto.AccountDto;
 import ru.t1.java.demo.dto.TransactionDto;
-import ru.t1.java.demo.model.Account;
 import ru.t1.java.demo.model.Transaction;
 
 @Component
@@ -14,7 +12,7 @@ public class TransactionMapper {
                 .amount(transactionDto.getAmount())
                 .transactionTime(transactionDto.getTransactionTime())
                 .build();
-    };
+    }
 
     public static TransactionDto toDto(Transaction transaction) {
         return TransactionDto.builder()
@@ -23,5 +21,5 @@ public class TransactionMapper {
                 .amount(transaction.getAmount())
                 .transactionTime(transaction.getTransactionTime())
                 .build();
-    };
+    }
 }

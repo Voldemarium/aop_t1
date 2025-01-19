@@ -1,5 +1,5 @@
 CREATE TABLE transaction (
-  id BIGINT NOT NULL,
+   id SERIAL,
    account_id INTEGER,
    amount DOUBLE PRECISION,
    transaction_time TIMESTAMP WITHOUT TIME ZONE,

@@ -6,15 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.t1.java.demo.aop.HandlingResult;
-import ru.t1.java.demo.aop.Track;
-import ru.t1.java.demo.aop.LogException;
-import ru.t1.java.demo.dto.AccountDto;
+import ru.t1.java.demo.aop.annotations.HandlingResult;
+import ru.t1.java.demo.aop.annotations.Track;
+import ru.t1.java.demo.aop.annotations.LogException;
 import ru.t1.java.demo.dto.ClientDto;
 import ru.t1.java.demo.exception.ClientException;
 import ru.t1.java.demo.service.ClientService;
-import ru.t1.java.demo.service.ImplService;
-import ru.t1.java.demo.service.impl.ClientServiceImpl;
 
 import java.io.IOException;
 
@@ -23,8 +20,6 @@ import java.io.IOException;
 @Slf4j
 @RequestMapping(value = "/client")
 public class ClientController {
-
-//    private final ClientServiceImpl clientService;
     private final ClientService clientService;
 
     @LogException

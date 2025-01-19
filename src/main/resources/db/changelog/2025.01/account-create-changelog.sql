@@ -1,5 +1,5 @@
 CREATE TABLE account (
-  id INTEGER NOT NULL,
+   id SERIAL,
    client_id BIGINT,
    account_type VARCHAR,
    balance DOUBLE PRECISION,
