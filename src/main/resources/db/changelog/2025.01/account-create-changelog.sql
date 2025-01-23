@@ -1,8 +1,8 @@
 CREATE TABLE account (
-   id SERIAL,
+   id BIGSERIAL,
    client_id BIGINT,
    account_type VARCHAR,
-   balance DOUBLE PRECISION,
+   balance NUMERIC(19,2),
    CONSTRAINT pk_account PRIMARY KEY (id)
 );
 

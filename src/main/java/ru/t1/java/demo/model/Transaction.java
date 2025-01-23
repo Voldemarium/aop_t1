@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.jpa.domain.AbstractPersistable;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -19,8 +20,8 @@ public class Transaction extends AbstractEntity<Long> {
     @JoinColumn(name = "account_id")
     private Long account_id;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column(name = "amount", precision = 19, scale = 2)
+    private BigDecimal amount;
 
     @Column(name = "transaction_time")
     private LocalDateTime transactionTime;

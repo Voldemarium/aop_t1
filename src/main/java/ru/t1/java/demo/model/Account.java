@@ -3,6 +3,8 @@ package ru.t1.java.demo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
@@ -18,6 +20,6 @@ public class Account extends AbstractEntity<Long> {
     @Column(name = "account_type")
     private AccountType accountType;
 
-    @Column(name = "balance")
-    Double balance;
+    @Column(name = "balance", precision = 10, scale = 2)
+    BigDecimal balance;
 }

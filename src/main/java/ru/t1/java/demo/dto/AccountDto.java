@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import ru.t1.java.demo.model.AccountType;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * DTO for {@link ru.t1.java.demo.model.Account}
@@ -26,5 +27,5 @@ public class AccountDto implements Serializable {
     @JsonProperty("account_id")
     private AccountType accountType;
     @JsonProperty("balance")
-    private Double balance;
+    private BigDecimal balance;
 }
