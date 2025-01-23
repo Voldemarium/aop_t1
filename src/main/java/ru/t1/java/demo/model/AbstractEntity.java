@@ -16,12 +16,12 @@ public abstract class AbstractEntity<PK extends Serializable> implements Persist
     @Nullable
     private PK id;
 
-    @org.springframework.lang.Nullable
+    @Nullable
     public PK getId() {
         return this.id;
     }
 
-    protected void setId(@org.springframework.lang.Nullable PK id) {
+    protected void setId(@Nullable PK id) {
         this.id = id;
     }
 

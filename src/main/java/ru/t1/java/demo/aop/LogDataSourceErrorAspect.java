@@ -7,6 +7,7 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.stereotype.Component;
+import ru.t1.java.demo.exception.DataSourceErrorException;
 import ru.t1.java.demo.model.DataSourceErrorLog;
 import ru.t1.java.demo.service.DataSourceErrorLogService;
 
@@ -19,7 +20,7 @@ import java.util.Arrays;
 public class LogDataSourceErrorAspect {
     private final DataSourceErrorLogService dataSourceErrorLogService;
 
-    @AfterThrowing(pointcut = "execution(* ru.t1.java.demo.repository.*.*(..))", throwing = "e")
+    @AfterThrowing(pointcut = "@annotation(ru.t1.java.demo.aop.annotations.LogDataSourceError)", throwing = "e")
     public void logExceptionAnnotation(JoinPoint joinPoint, Exception e) {
         System.err.println("ASPECT EXCEPTION ANNOTATION: Logging exception: {}" + joinPoint.getSignature().getName());
         String signatureName = joinPoint.getSignature().toShortString();
@@ -30,15 +31,10 @@ public class LogDataSourceErrorAspect {
                 .message(e.getMessage())
                 .build();
         e.printStackTrace();
-
-        String methodName = joinPoint.getSignature().getName();
-        Class<?>[] userInterfaces = AopProxyUtils.proxiedUserInterfaces(joinPoint.getTarget());
-        boolean isDataSourceErrorLogRepository = Arrays.stream(userInterfaces).map(Class::getSimpleName)
-                .anyMatch(s -> s.equals("DataSourceErrorLogRepository"));
-        if (!(isDataSourceErrorLogRepository && methodName.equals("save"))) {
-            dataSourceErrorLogService.saveDataSourceErrorLog(errorLog);
-        } else {
-            log.error("THIS IS ERROR RECORDING ERROR!!!");
-        }
+           if (!dataSourceErrorLogService.sendDataSourceErrorLog("t1_demo_metrics", errorLog)) {
+               log.error("Failed to send message: {}", errorLog);
+               dataSourceErrorLogService.saveDataSourceErrorLog(errorLog);
+               log.error("saved message to database: {}", errorLog);
+           }
     }
 }
