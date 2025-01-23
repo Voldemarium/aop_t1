@@ -4,11 +4,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.t1.java.demo.dto.TransactionDto;
+import ru.t1.java.demo.model.dto.TransactionDto;
 import ru.t1.java.demo.model.Transaction;
 import ru.t1.java.demo.repository.TransactionRepository;
 import ru.t1.java.demo.util.TransactionMapper;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -41,4 +42,7 @@ public class TransactionService {
         repository.deleteById(id);
     }
 
+    public void saveTransactions(List<Transaction> transactions) {
+        repository.saveAll(transactions);
+    }
 }

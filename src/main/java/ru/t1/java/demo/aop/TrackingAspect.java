@@ -42,9 +42,10 @@ public class TrackingAspect {
             result = pJoinPoint.proceed();//Important
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+        } finally {
+            long afterTime = System.currentTimeMillis();
+            log.info("Время исполнения: {} ms", (afterTime - beforeTime));
         }
-        long afterTime = System.currentTimeMillis();
-        log.info("Время исполнения: {} ms", (afterTime - beforeTime));
         return result;
     }
 

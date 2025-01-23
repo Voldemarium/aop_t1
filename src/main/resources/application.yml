@@ -27,14 +27,29 @@ t1:
   scan-path: ru.t1.java.demo
   kafka:
     bootstrap:
-      server: localhost:9092
+#      server: localhost:9092
+      server:  ${KAFKA_SERVER:localhost:9092}
     consumer:
-      group-id: t1-demo
-      max.poll.records: 10
+      consumer1:
+        group-id: t1-demo
+        max.poll.records: 10
+        session-timeout: 10000
+        heartbeat.interval: 3000
+      consumer2:
+        group-id: t1-demo-account
+        max.poll.records: 10
+        session-timeout: 10000
+        heartbeat.interval: 3000
+      consumer3:
+        group-id: t1-demo-transaction
+        max.poll.records: 10
+        session-timeout: 10000
+        heartbeat.interval: 3000
     producer:
       enable: true
     topic:
       metrics: t1_demo_metrics
+      client_registration: t1_demo_client_registration
       client_id_registered: t1_demo_client_registered
       client_accounts: t1_demo_accounts
       client_transactions: t1_demo_transactions

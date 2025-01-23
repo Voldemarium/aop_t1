@@ -4,12 +4,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.t1.java.demo.aop.annotations.LogDataSourceError;
-import ru.t1.java.demo.dto.AccountDto;
+import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.model.Account;
 import ru.t1.java.demo.repository.AccountRepository;
 import ru.t1.java.demo.util.AccountMapper;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -37,8 +37,12 @@ public class AccountService {
         return accountDto;
     }
 
-    @LogDataSourceError
+//    @LogDataSourceError
     public void deleteAccountById(Long id) {
         repository.deleteById(id);
+    }
+
+    public void saveAccounts(List<Account> accounts) {
+        repository.saveAll(accounts);
     }
 }
