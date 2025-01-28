@@ -11,6 +11,9 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "client")
 public class Client extends AbstractEntity<Long> {
+    @Column(name = "client_id")
+    private String clientId;
+
     @Column(name = "first_name")
     private String firstName;
 

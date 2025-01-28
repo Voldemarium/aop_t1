@@ -2,12 +2,11 @@ package ru.t1.java.demo.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.jpa.domain.AbstractPersistable;
+import org.hibernate.annotations.CreationTimestamp;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.security.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -17,6 +16,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @Table(name = "transaction")
 public class Transaction extends AbstractEntity<Long> {
+    @Column(name = "transaction_id")
+    private String transactionId;
+
     @JoinColumn(name = "account_id")
     private Long account_id;
 
@@ -25,5 +27,14 @@ public class Transaction extends AbstractEntity<Long> {
 
     @Column(name = "transaction_time")
     private LocalDateTime transactionTime;
+
+    @Column(name = "timestamp")
+    @CreationTimestamp
+    private Timestamp timestamp;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_status")
+    private TransactionStatus transactionStatus;
+
 
 }

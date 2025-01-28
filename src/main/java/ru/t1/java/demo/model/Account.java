@@ -13,6 +13,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends AbstractEntity<Long> {
+    @Column(name = "account_id")
+    private String accountId;
+
     @JoinColumn(name = "client_id")
     private Long client_id;
 
@@ -22,4 +25,12 @@ public class Account extends AbstractEntity<Long> {
 
     @Column(name = "balance", precision = 10, scale = 2)
     BigDecimal balance;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private AccountStatus status;
+
+    @Column(name = "frozen_amount", precision = 19, scale = 2)
+    private BigDecimal frozenAmount;
+
 }
