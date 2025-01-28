@@ -26,12 +26,12 @@ public class AccountService {
 
     public AccountDto getAccountById(Long id) {
         log.debug("Call method getAccount with id {}", id);
-        AccountDto accountDto = null;
+        AccountDto accountDto;
 
         if (cache.containsKey(id)) {
             return AccountMapper.toDto(cache.get(id));
         }
-        Account entity = repository.findById(id).get();
+        Account entity = repository.findById(id).orElseThrow();
         accountDto = AccountMapper.toDto(entity);
         cache.put(id, entity);
         return accountDto;

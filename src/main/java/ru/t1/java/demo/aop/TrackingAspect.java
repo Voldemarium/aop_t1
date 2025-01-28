@@ -21,30 +21,23 @@ public class TrackingAspect {
     private static final AtomicLong START_TIME = new AtomicLong();
 
     @Before("@annotation(ru.t1.java.demo.aop.annotations.Track)")
-    public void logExecTime(JoinPoint joinPoint) throws Throwable {
+    public void logExecTime(JoinPoint joinPoint) {
         log.info("Старт метода: {}", joinPoint.getSignature().toShortString());
         START_TIME.addAndGet(System.currentTimeMillis());
     }
 
-    @After("@annotation(ru.t1.java.demo.aop.annotations.Track)")
-    public void calculateTime(JoinPoint joinPoint) {
-        long afterTime = System.currentTimeMillis();
-        log.info("Время исполнения: {} ms", (afterTime - START_TIME.get()));
-        START_TIME.set(0L);
-    }
-
     @Around("@annotation(ru.t1.java.demo.aop.annotations.Track)")
-    public Object logExecTime(ProceedingJoinPoint pJoinPoint) {
+    public Object logExecTime(ProceedingJoinPoint pJoinPoint) throws Throwable {
         log.info("Вызов метода: {}", pJoinPoint.getSignature().toShortString());
         long beforeTime = System.currentTimeMillis();
-        Object result = null;
+        Object result;
         try {
             result = pJoinPoint.proceed();//Important
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
+        } finally {
+            long afterTime = System.currentTimeMillis();
+            log.info("Время исполнения: {} ms", (afterTime - beforeTime));
+
         }
-        long afterTime = System.currentTimeMillis();
-        log.info("Время исполнения: {} ms", (afterTime - beforeTime));
         return result;
     }
 

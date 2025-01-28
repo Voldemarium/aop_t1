@@ -31,7 +31,7 @@ public class TransactionService {
             return TransactionMapper.toDto(cache.get(id));
         }
 
-        Transaction entity = repository.findById(id).get();
+        Transaction entity = repository.findById(id).orElseThrow();
         transactionDto = TransactionMapper.toDto(entity);
         cache.put(id, entity);
         return transactionDto;

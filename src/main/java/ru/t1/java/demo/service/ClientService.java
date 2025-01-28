@@ -33,7 +33,7 @@ public class ClientService {
             return ClientMapper.toDto(cache.get(id));
         }
 
-        Client entity = repository.findById(id).get();
+        Client entity = repository.findById(id).orElseThrow();
         clientDto = ClientMapper.toDto(entity);
         cache.put(id, entity);
         return clientDto;
