@@ -19,15 +19,21 @@ public class AccountController {
 
     @GetMapping(value = "/get/{id}")
     public AccountDto getAccountById(@PathVariable("id") long id) {
-        log.info("account: {}", accountService.getAccountById(id));
-        return accountService.getAccountById(id);
+        log.info("account: {}", accountService.getAccountDtoById(id));
+        return accountService.getAccountDtoById(id);
     }
 
     @Metric(maxExecutionTime = 3000)
     @DeleteMapping(value = "/deleteById/{id}")
     public void deleteAccountById(@PathVariable("id") long id){
-//        accountService.deleteAccountById(id);
-        repository.deleteById(id);
+        accountService.deleteAccountById(id);
     }
+
+//    @Metric(maxExecutionTime = 3)
+//    @GetMapping(value = "/getId/{account_id}")
+//    public Long getIdByAccountId(@PathVariable("account_id") String accountId) {
+//        Long id = repository.findIdByAccountId(accountId);
+//        return id;
+//    }
 }
 

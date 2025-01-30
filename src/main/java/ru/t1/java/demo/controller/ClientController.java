@@ -13,11 +13,9 @@ import ru.t1.java.demo.aop.annotations.Track;
 import ru.t1.java.demo.aop.annotations.LogException;
 import ru.t1.java.demo.kafka.KafkaClientProducer;
 import ru.t1.java.demo.model.dto.ClientDto;
-import ru.t1.java.demo.exception.ClientException;
 import ru.t1.java.demo.service.ClientService;
 import ru.t1.java.demo.service.impl.ClientServiceImpl;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 

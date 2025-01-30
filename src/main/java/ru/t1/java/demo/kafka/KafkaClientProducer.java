@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import ru.t1.java.demo.model.dto.ClientDto;
+
 import java.util.UUID;
 
 @Slf4j
@@ -12,7 +13,7 @@ public class KafkaClientProducer {
     private final KafkaTemplate<String, Object> template;
 
     // Метод без передачи топика (берется сконфигурированный топик KafkaTemplate из класс KafkaConfig)
-    public void send(Long clientId) {
+    public void send(String clientId) {
         try {
             template.sendDefault(UUID.randomUUID().toString(), clientId).get();
 

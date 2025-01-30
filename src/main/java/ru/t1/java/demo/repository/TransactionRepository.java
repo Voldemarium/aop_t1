@@ -1,9 +1,16 @@
 package ru.t1.java.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 import ru.t1.java.demo.model.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
+    @Query("select id from Transaction t where t.transactionId = ?1")
+    Long findIdByTransactionId(@NonNull String transactionId);
+
+    @Query("select transactionId from Transaction t where t.id = ?1")
+    String findTransactionIdById(@NonNull Long id);
 }

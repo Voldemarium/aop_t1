@@ -18,8 +18,11 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
 import ru.t1.java.demo.kafka.KafkaClientProducer;
 import ru.t1.java.demo.kafka.KafkaErrorProducer;
+import ru.t1.java.demo.kafka.KafkaTransactionAcceptProducer;
+import ru.t1.java.demo.kafka.KafkaTransactionProducer;
 import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.model.dto.ClientDto;
+import ru.t1.java.demo.model.dto.TransactionAcceptDto;
 import ru.t1.java.demo.model.dto.TransactionDto;
 
 import java.util.HashMap;
@@ -40,7 +43,10 @@ public class KafkaConfig {
     private String clientTopic;
     @Value("${t1.kafka.topic.metrics}")
     private String metricsTopic;
-
+    @Value("${t1.kafka.topic.client_transactions}")
+    private String transactionsTopic;
+    @Value("${t1.kafka.topic.client_transactions_accept}")
+    private String transactionsAcceptTopic;
 
     ///  ---------KafkaClientProducer----------------
     @Bean
@@ -59,7 +65,7 @@ public class KafkaConfig {
         return buildKafkaListenerContainerFactory(consumerFactory);
     }
 
-    ///  ---------KafkaAccountProducer----------------
+    ///  ---------KafkaAccountConsumer---------------
     @Bean
     public ConsumerFactory<String, AccountDto> consumer2ListenerFactory() {
         Map<String, Object> props = new HashMap<>(kafkaCustomProperties.buildConsumerCommonProperties());
@@ -76,7 +82,7 @@ public class KafkaConfig {
         return buildKafkaListenerContainerFactory(consumerFactory);
     }
 
-    ///  ---------KafkaTransactionProducer----------------
+    ///  ---------KafkaTransactionConsumer----------------
     @Bean
     public ConsumerFactory<String, TransactionDto> consumer3ListenerFactory() {
         Map<String, Object> props = new HashMap<>(kafkaCustomProperties.buildConsumerCommonProperties());
@@ -152,12 +158,41 @@ public class KafkaConfig {
         return new KafkaErrorProducer(template);
     }
 
-    @Bean
-    public ProducerFactory<String, Object> dataSourceErrorLogProducerFactory() {
-        return producerFactory();
+    ///  ---------KafkaTransactionProducer----------------
+    @Bean("transaction")
+    public KafkaTemplate<String, TransactionDto> kafkaTransactionTemplate(ProducerFactory<String, TransactionDto> producerPatFactory) {
+        return new KafkaTemplate<>(producerPatFactory);
     }
 
-    public ProducerFactory<String, Object> producerFactory() {
+    @Bean
+    @ConditionalOnProperty(value = "t1.kafka.producer.enable",
+            havingValue = "true",
+            matchIfMissing = true)
+    public KafkaTransactionProducer producerTransaction(@Qualifier("transaction") KafkaTemplate<String, TransactionDto> template) {
+        template.setDefaultTopic(transactionsTopic);
+        return new KafkaTransactionProducer(template);
+    }
+
+    ///  ---------KafkaTransactionAcceptProducer----------------
+    @Bean("transaction_accept")
+    public KafkaTemplate<String, TransactionAcceptDto> kafkaTransactionAcceptTemplate(ProducerFactory<String,
+            TransactionAcceptDto> producerPatFactory) {
+        return new KafkaTemplate<>(producerPatFactory);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "t1.kafka.producer.enable",
+            havingValue = "true",
+            matchIfMissing = true)
+    public KafkaTransactionAcceptProducer producerTransactionAccept(
+            @Qualifier("transaction_accept") KafkaTemplate<String, TransactionAcceptDto> template) {
+        template.setDefaultTopic(transactionsAcceptTopic);
+        return new KafkaTransactionAcceptProducer(template);
+    }
+
+
+    @Bean
+    public <T> ProducerFactory<String, T> producerFactory() {
         Map<String, Object> producerProperties = new HashMap<>(kafkaCustomProperties.buildProducerCommonProperties());
         return new DefaultKafkaProducerFactory<>(producerProperties);
     }

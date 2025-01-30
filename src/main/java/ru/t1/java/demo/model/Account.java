@@ -1,6 +1,7 @@
 package ru.t1.java.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -9,21 +10,24 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Builder
-@Table(name = "account")
+@Table(schema = "t1_demo", name = "account")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends AbstractEntity<Long> {
     @Column(name = "account_id")
+    @NotNull
     private String accountId;
 
     @JoinColumn(name = "client_id")
-    private Long client_id;
+    @NotNull
+    private Long clientId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_type")
+    @NotNull
     private AccountType accountType;
 
-    @Column(name = "balance", precision = 10, scale = 2)
+    @Column(name = "balance", precision = 19, scale = 2)
     BigDecimal balance;
 
     @Enumerated(EnumType.STRING)

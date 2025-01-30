@@ -26,10 +26,15 @@ public class ClientServiceImpl implements ImplService<Client, ClientDto> {
 
     @Override
     public void registerEvents(List<Client> clients) {
-        repository.saveAll(clients)          // сохраняем список в БД
-                .stream()
-                .map(Client::getId)
-                .forEach(kafkaClientProducer::send); // отправляем сообщения в Kafka с сохраненным Id клиента
+        clients = clients.stream().filter(client -> client.getClientId() != null &&
+                client.getFirstName() != null &&
+                client.getLastName() != null).toList();
+        if (!clients.isEmpty()) {
+            repository.saveAll(clients)          // сохраняем список в БД
+                    .stream()
+                    .map(Client::getClientId)
+                    .forEach(kafkaClientProducer::send); // отправляем сообщения в Kafka с сохраненным Id клиента
+        }
     }
 
     @Override

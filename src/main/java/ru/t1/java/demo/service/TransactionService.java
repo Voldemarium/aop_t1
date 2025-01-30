@@ -4,8 +4,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.t1.java.demo.model.dto.TransactionDto;
 import ru.t1.java.demo.model.Transaction;
+import ru.t1.java.demo.model.dto.TransactionDto;
 import ru.t1.java.demo.repository.TransactionRepository;
 import ru.t1.java.demo.util.TransactionMapper;
 
@@ -18,6 +18,7 @@ import java.util.Map;
 public class TransactionService {
     private final TransactionRepository repository;
     private final Map<Long, Transaction> cache;
+    private final TransactionMapper mapper;
 
     @PostConstruct
     void init() {
@@ -27,13 +28,11 @@ public class TransactionService {
     public TransactionDto getTransactionById(Long id) {
         log.debug("Call method getTransactionById with id {}", id);
         TransactionDto transactionDto;
-
         if (cache.containsKey(id)) {
-            return TransactionMapper.toDto(cache.get(id));
+            return mapper.toDto(cache.get(id));
         }
-
         Transaction entity = repository.findById(id).get();
-        transactionDto = TransactionMapper.toDto(entity);
+        transactionDto = mapper.toDto(entity);
         cache.put(id, entity);
         return transactionDto;
     }
@@ -42,7 +41,14 @@ public class TransactionService {
         repository.deleteById(id);
     }
 
+    public Transaction saveTransaction(Transaction transaction) {
+        return repository.save(transaction);
+    }
+
     public void saveTransactions(List<Transaction> transactions) {
         repository.saveAll(transactions);
+
     }
+
+
 }

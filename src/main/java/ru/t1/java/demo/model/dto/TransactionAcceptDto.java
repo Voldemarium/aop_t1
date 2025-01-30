@@ -8,26 +8,28 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 
-/**
- * DTO for {@link ru.t1.java.demo.model.Client}
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Builder
-public class ClientDto implements Serializable {
+public class TransactionAcceptDto {
     @NotNull
     @JsonProperty("client_id")
     private String clientId;
     @NotNull
-    @JsonProperty("first_name")
-    private String firstName;
-    @JsonProperty("middle_name")
-    private String middleName;
+    @JsonProperty("account_id")
+    private String accountId;
     @NotNull
-    @JsonProperty("last_name")
-    private String lastName;
+    @JsonProperty("transaction_id")
+    private String transactionId;
+    @JsonProperty("timestamp")
+    private Timestamp timestamp;
+    @JsonProperty("amount")
+    private BigDecimal transactionAmount;
+    @JsonProperty("balance")
+    private BigDecimal accountBalance;
 }

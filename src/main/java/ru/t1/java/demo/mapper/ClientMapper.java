@@ -1,20 +1,20 @@
 package ru.t1.java.demo.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 import ru.t1.java.demo.model.Client;
 import ru.t1.java.demo.model.dto.ClientDto;
 
 import java.util.List;
 
-@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE,
-        componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ClientMapper {
     Client toEntity(ClientDto clientDto);
 
-    ClientDto toDto(Client client);
+    List<ClientDto> toClientDto(List<Client> client);
 
-    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
-    Client partialUpdate(ClientDto clientDto, @MappingTarget Client client);
+    ClientDto toClientDto(Client client);
 
-    List<ClientDto> toClientDto(List<Client> clients);
+    List<Client> toEntity(List<ClientDto> clientDto);
 }

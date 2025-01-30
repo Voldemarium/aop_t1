@@ -1,8 +1,11 @@
 CREATE TABLE account (
    id BIGSERIAL,
-   client_id BIGINT,
-   account_type VARCHAR,
+   account_id VARCHAR NOT NULL,
+   client_id BIGINT NOT NULL,
+   account_type VARCHAR NOT NULL,
    balance NUMERIC(19,2),
+   status VARCHAR,
+   frozen_amount DECIMAL(19, 2),
    CONSTRAINT pk_account PRIMARY KEY (id)
 );
 
