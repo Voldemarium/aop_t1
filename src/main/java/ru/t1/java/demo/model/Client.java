@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Table(schema = "t1_demo", name = "client")
 public class Client extends AbstractEntity<Long> {
-    @Column(name = "client_id")
+    @Column(name = "client_id", unique = true)
     @NotNull
     private String clientId;
 

@@ -14,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import ru.t1.java.demo.aop.annotations.Metric;
 import ru.t1.java.demo.kafka.KafkaErrorProducer;
+import ru.t1.java.demo.kafka.KafkaTimeExceededProducer;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
@@ -24,20 +25,18 @@ import java.util.concurrent.atomic.AtomicLong;
 @Component
 @RequiredArgsConstructor
 public class MetricAspect {
-    private final KafkaErrorProducer kafkaErrorProducer;
+    private final KafkaTimeExceededProducer kafkaTimeExceededProducer;
     @Value("${t1.kafka.topic.metrics}")
     private String metricsTopic;
 
     @Around("@annotation(ru.t1.java.demo.aop.annotations.Metric)")
-    public Object logExecTime(ProceedingJoinPoint pJoinPoint) {
+    public Object logExecTime(ProceedingJoinPoint pJoinPoint) throws Throwable {
         log.info("Вызов метода: {}", pJoinPoint.getSignature().getName());
 
         long beforeTime = System.currentTimeMillis();
-        Object result = null;
+        Object result;
         try {
             result = pJoinPoint.proceed();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
         } finally {
             long maxExecutionTime = ((MethodSignature) pJoinPoint.getSignature()).getMethod()
                     .getAnnotation(Metric.class).maxExecutionTime();
@@ -49,12 +48,10 @@ public class MetricAspect {
                 String message = "Время исполнения " + executionTime + "ms, " +
                         "метод " + methodName +
                         "с параметрами: " + Arrays.toString(parameters);
-                kafkaErrorProducer.sendOverMaxExecutionTimeMessage(metricsTopic, message);
+                kafkaTimeExceededProducer.sendOverMaxExecutionTimeMessage(metricsTopic, message);
                 log.info("Максимальное время {}ms превышено", maxExecutionTime);
             }
-
         }
-
         return result;
     }
 

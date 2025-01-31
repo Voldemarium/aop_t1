@@ -1,54 +1,42 @@
 package ru.t1.java.demo.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.aop.annotations.LogDataSourceError;
 import ru.t1.java.demo.model.Transaction;
 import ru.t1.java.demo.model.dto.TransactionDto;
 import ru.t1.java.demo.repository.TransactionRepository;
 import ru.t1.java.demo.util.TransactionMapper;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class TransactionService {
     private final TransactionRepository repository;
-    private final Map<Long, Transaction> cache;
     private final TransactionMapper mapper;
 
-    @PostConstruct
-    void init() {
-        getTransactionById(1L);
-    }
-
+    @LogDataSourceError
     public TransactionDto getTransactionById(Long id) {
-        log.debug("Call method getTransactionById with id {}", id);
-        TransactionDto transactionDto;
-        if (cache.containsKey(id)) {
-            return mapper.toDto(cache.get(id));
-        }
-        Transaction entity = repository.findById(id).get();
-        transactionDto = mapper.toDto(entity);
-        cache.put(id, entity);
-        return transactionDto;
+        Transaction entity = repository.findById(id).orElseThrow();
+        return mapper.toDto(entity);
     }
 
+    @LogDataSourceError
     public void deleteTransactionById(Long id) {
         repository.deleteById(id);
     }
 
-    public Transaction saveTransaction(Transaction transaction) {
-        return repository.save(transaction);
+    @LogDataSourceError
+    public void saveTransaction(Transaction transaction) {
+        repository.save(transaction);
     }
 
+    @LogDataSourceError
     public void saveTransactions(List<Transaction> transactions) {
         repository.saveAll(transactions);
 
     }
-
-
 }

@@ -1,6 +1,6 @@
 CREATE TABLE transaction (
    id BIGSERIAL,
-   transaction_id VARCHAR NOT NULL,
+   transaction_id VARCHAR NOT NULL UNIQUE,
    account_id INTEGER NOT NULL,
    amount NUMERIC(19,2),
    transaction_time TIMESTAMP WITHOUT TIME ZONE,

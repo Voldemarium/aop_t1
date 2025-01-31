@@ -23,7 +23,6 @@ public class KafkaAccountConsumer {
     private final AccountService accountService;
     private final AccountMapper mapper;
 
-
     @KafkaListener(id = "${t1.kafka.consumer.consumer2.group-id}",
             topics = "${t1.kafka.topic.client_accounts}",
             containerFactory = "kafkaListenerContainerFactory2")

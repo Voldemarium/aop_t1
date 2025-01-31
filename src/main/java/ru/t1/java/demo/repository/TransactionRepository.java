@@ -8,9 +8,5 @@ import ru.t1.java.demo.model.Transaction;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    @Query("select id from Transaction t where t.transactionId = ?1")
-    Long findIdByTransactionId(@NonNull String transactionId);
 
-    @Query("select transactionId from Transaction t where t.id = ?1")
-    String findTransactionIdById(@NonNull Long id);
 }

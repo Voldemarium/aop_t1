@@ -18,7 +18,7 @@ public class AccountMapper {
         if ( accountDto == null ) {
             return null;
         }
-        Long clientId = clientService.getIdByClientId(accountDto.getClient_id());
+        Long clientId = clientService.getIdByClientId(accountDto.getClientId());
         return Account.builder()
                 .accountId(accountDto.getAccountId())
                 .clientId(clientId)
@@ -34,10 +34,10 @@ public class AccountMapper {
             return null;
         }
         assert account.getId() != null;
-        String clientId = clientService.getClientIdById(account.getClientId());
+        String clientId = clientService.getClientIdById(account.getId());
         return AccountDto.builder()
                 .accountId(account.getAccountId())
-                .client_id(clientId)
+                .clientId(clientId)
                 .accountType(account.getAccountType())
                 .balance(account.getBalance())
                 .status(account.getStatus())

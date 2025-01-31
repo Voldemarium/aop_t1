@@ -22,7 +22,7 @@ import java.util.*;
 @ConfigurationProperties(prefix = "kafka")
 @Getter
 @Setter
-public class KafkaCustomProperties {
+public class KafkaCommonProperties {
     @Value("${t1.kafka.bootstrap.server}")
     private String servers;
     @Value("${t1.kafka.session.timeout.ms:15000}")

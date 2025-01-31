@@ -2,7 +2,7 @@
 
 CREATE TABLE client (
    id BIGSERIAL,
-   client_id VARCHAR NOT NULL,
+   client_id VARCHAR NOT NULL UNIQUE,
    first_name VARCHAR NOT NULL,
    middle_name VARCHAR,
    last_name VARCHAR NOT NULL,

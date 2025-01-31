@@ -14,26 +14,23 @@ import ru.t1.java.demo.service.AccountService;
 @RequestMapping("/account")
 public class AccountController {
     private final AccountService accountService;
-    private final AccountRepository repository;
 
-
-    @GetMapping(value = "/get/{id}")
+    @GetMapping(value = "/getById/{id}")
     public AccountDto getAccountById(@PathVariable("id") long id) {
-        log.info("account: {}", accountService.getAccountDtoById(id));
         return accountService.getAccountDtoById(id);
     }
 
-    @Metric(maxExecutionTime = 3000)
+    @Metric(maxExecutionTime = 100)
     @DeleteMapping(value = "/deleteById/{id}")
     public void deleteAccountById(@PathVariable("id") long id){
         accountService.deleteAccountById(id);
     }
 
-//    @Metric(maxExecutionTime = 3)
-//    @GetMapping(value = "/getId/{account_id}")
-//    public Long getIdByAccountId(@PathVariable("account_id") String accountId) {
-//        Long id = repository.findIdByAccountId(accountId);
-//        return id;
-//    }
+    @Metric(maxExecutionTime = 100)
+    @GetMapping(value = "/getByAccountId/{account_id}")
+    public AccountDto getAccountDtoByAccountId(@PathVariable("account_id") String accountId) {
+         return accountService.getAccountDtoByAccountId(accountId);
+
+    }
 }
 
