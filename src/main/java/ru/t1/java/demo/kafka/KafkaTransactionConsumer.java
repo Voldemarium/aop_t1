@@ -8,9 +8,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
-import ru.t1.java.demo.model.Account;
 import ru.t1.java.demo.model.AccountStatus;
-import ru.t1.java.demo.model.Transaction;
 import ru.t1.java.demo.model.TransactionStatus;
 import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.model.dto.TransactionAcceptDto;
@@ -31,7 +29,7 @@ public class KafkaTransactionConsumer {
     private final TransactionService transactionService;
     private final AccountService accountService;
     private final ClientService clientService;
-    private final TransactionMapper mapper;
+    private final TransactionMapper transactionMapper;
     private final KafkaTransactionAcceptProducer transactionAcceptProducer;
 
     @KafkaListener(id = "${t1.kafka.consumer.consumer3.group-id}",
@@ -45,28 +43,29 @@ public class KafkaTransactionConsumer {
 
         try {
             messageList.stream()
-                    .map(mapper::toEntity)
+                    .map(transactionMapper::toEntity)
                     .forEach(transaction -> {
-                        Account account = accountService.getAccountById(transaction.getAccountId());
-                        if (account.getStatus().equals(AccountStatus.OPEN)) {
+                        AccountDto accountDto = accountService.getAccountDtoById(transaction.getAccountId());
+                        String accountId = accountDto.getAccountId();
+                        if (accountDto.getStatus().equals(AccountStatus.OPEN)) {
                             // если статус счета OPEN, то cохраняем транзакцию в БД со статусом REQUESTED
                             transaction.setTransactionStatus(TransactionStatus.REQUESTED);
                             transaction.setTimestamp(new Timestamp(System.currentTimeMillis()));
                             transactionService.saveTransaction(transaction);
                             // изменяем счет клиента на сумму транзакции,
-                            BigDecimal balance = account.getBalance();
+                            BigDecimal balance = accountDto.getBalance();
                             BigDecimal transactionAmount = transaction.getAmount();
-                            BigDecimal updatedBalance = balance.subtract(transactionAmount);
-                            int res = accountService.updateBalanceById(account.getId(), updatedBalance);
+                            int res = accountService.updateBalanceById(accountDto.getAccountId(),
+                                    balance.subtract(transactionAmount));
                             if (res == 1) {
                                 // отправляет сообщение в топик t1_demo_transaction_accept с информацией
                                 TransactionAcceptDto transactionAcceptDto = TransactionAcceptDto.builder()
-                                        .clientId(clientService.getClientIdById(account.getClientId()))
-                                        .accountId(account.getAccountId())
+                                        .clientId(clientService.getClientIdById(accountService.getIdByAccountId(accountId)))
+                                        .accountId(accountId)
                                         .transactionId(transaction.getTransactionId())
                                         .timestamp(transaction.getTimestamp())
                                         .transactionAmount(transaction.getAmount())
-                                        .accountBalance(updatedBalance)
+                                        .accountBalance(balance)
                                         .build();
                                 transactionAcceptProducer.send(transactionAcceptDto);
                             }

@@ -1,11 +1,11 @@
 package ru.t1.java.demo.service;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.aop.annotations.LogDataSourceError;
+import ru.t1.java.demo.exception.AccountException;
 import ru.t1.java.demo.model.Account;
-import ru.t1.java.demo.model.AccountStatus;
 import ru.t1.java.demo.model.dto.AccountDto;
 import ru.t1.java.demo.repository.AccountRepository;
 import ru.t1.java.demo.util.AccountMapper;
@@ -19,55 +19,45 @@ import java.util.Map;
 @Slf4j
 public class AccountService {
     private final AccountRepository repository;
-    private final Map<Long, Account> cache;
     private final AccountMapper mapper;
+    private final Map<Long, Account> cache;
 
-    @PostConstruct
-    void init() {
-        getAccountDtoById(1L);
-    }
-
+    @LogDataSourceError
     public AccountDto getAccountDtoById(Long id) {
-        log.debug("Call method getAccount with id {}", id);
-        AccountDto accountDto = null;
-
         if (cache.containsKey(id)) {
             return mapper.toDto(cache.get(id));
         }
-        Account entity = repository.findById(id).get();
-        accountDto = mapper.toDto(entity);
+        Account entity = repository.findById(id).orElseThrow();
         cache.put(id, entity);
-        return accountDto;
+        return mapper.toDto(entity);
     }
 
-    public Account getAccountById(Long id) {
-        return repository.findById(id).orElseThrow();
-    }
-
-    //    @LogDataSourceError
+    @LogDataSourceError
     public void deleteAccountById(Long id) {
         repository.deleteById(id);
     }
 
+    @LogDataSourceError
     public void saveAccounts(List<Account> accounts) {
         repository.saveAll(accounts);
     }
 
+    @LogDataSourceError
     public Long getIdByAccountId(String accountId) {
-        return repository.findIdByAccountId(accountId);
+        return repository.findIdByAccountId(accountId).orElseThrow();
     }
 
+    @LogDataSourceError
     public String getAccountIdById(Long id) {
-        return repository.findAccountIdById(id);
+        return repository.findAccountIdById(id).orElseThrow();
     }
 
-//    public AccountStatus getStatusById(Long id) {
-//        return repository.findStatusById(id);
-//    }
-
-//    public BigDecimal getBalanceById(Long id) { return repository.findBalanceById(id); }
-
-    public int updateBalanceById(Long id, BigDecimal updatedBalance) {
-       return repository.updateBalanceById(id, updatedBalance);
+    @LogDataSourceError
+    public int updateBalanceById(String accountId, BigDecimal updatedBalance) {
+        int result = repository.updateBalanceById(accountId, updatedBalance);
+        if (result > 1) {
+            throw new AccountException("More than one entity was updated!!!: " + result);
+        }
+        return result;
     }
 }

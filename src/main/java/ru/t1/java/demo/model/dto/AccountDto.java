@@ -28,7 +28,7 @@ public class AccountDto  {
     private String accountId;
     @NotNull
     @JsonProperty("client_id")
-    private String client_id;
+    private String clientId;
     @NotNull
     @JsonProperty("account_type")
     private AccountType accountType;

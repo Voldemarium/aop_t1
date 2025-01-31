@@ -29,15 +29,13 @@ public class MetricAspect {
     private String metricsTopic;
 
     @Around("@annotation(ru.t1.java.demo.aop.annotations.Metric)")
-    public Object logExecTime(ProceedingJoinPoint pJoinPoint) {
+    public Object logExecTime(ProceedingJoinPoint pJoinPoint) throws Throwable {
         log.info("Вызов метода: {}", pJoinPoint.getSignature().getName());
 
         long beforeTime = System.currentTimeMillis();
-        Object result = null;
+        Object result;
         try {
             result = pJoinPoint.proceed();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
         } finally {
             long maxExecutionTime = ((MethodSignature) pJoinPoint.getSignature()).getMethod()
                     .getAnnotation(Metric.class).maxExecutionTime();

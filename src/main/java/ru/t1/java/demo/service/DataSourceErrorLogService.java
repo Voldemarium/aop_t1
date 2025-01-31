@@ -2,6 +2,9 @@ package ru.t1.java.demo.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.t1.java.demo.aop.annotations.LogDataSourceError;
+import ru.t1.java.demo.aop.annotations.LogException;
+import ru.t1.java.demo.aop.annotations.LogExecution;
 import ru.t1.java.demo.kafka.KafkaErrorProducer;
 import ru.t1.java.demo.mapper.DataSourceErrorLogMapper;
 import ru.t1.java.demo.model.DataSourceErrorLog;
@@ -16,20 +19,22 @@ public class DataSourceErrorLogService {
     private final KafkaErrorProducer producer;
     private final DataSourceErrorLogMapper errorLogMapper;
 
+    @LogException
     public void saveDataSourceErrorLog(DataSourceErrorLog log) {
         repository.save(log);
     }
 
+    @LogException
     public boolean sendDataSourceErrorLog(String topic, DataSourceErrorLog errorLog) {
        return producer.sendDataSourceErrorLog(topic, errorLogMapper.toDto(errorLog));
     }
 
-//    @LogDataSourceError
+    @LogDataSourceError
     public List<DataSourceErrorLogDto> getAllErrorLogs() {
         return errorLogMapper.toDataSourceErrorLogDto(repository.findAll());
     }
 
-//    @LogDataSourceError
+    @LogDataSourceError
     public void deleteDataSourceErrorLogById(Long id) {
         repository.deleteById(id);
     }

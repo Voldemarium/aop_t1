@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(schema = "t1_demo", name = "transaction")
 public class Transaction extends AbstractEntity<Long> {
-    @Column(name = "transaction_id")
+    @Column(name = "transaction_id", unique = true)
     @NotNull
     private String transactionId;
 
@@ -31,11 +31,9 @@ public class Transaction extends AbstractEntity<Long> {
     private BigDecimal amount;
 
     @Column(name = "transaction_time")
-//    @CreationTimestamp // устанавливает дату и время создания при первом сохранении записи
     private LocalDateTime transactionTime;
 
     @Column(name = "time_stamp")
-//    @UpdateTimestamp // обновляет время последнего изменения при каждом обновлении записи
     private Timestamp timestamp;
 
     @Enumerated(EnumType.STRING)

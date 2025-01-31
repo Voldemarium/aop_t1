@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class LogDataSourceErrorAspect {
     private final DataSourceErrorLogService dataSourceErrorLogService;
 
-    @AfterThrowing(pointcut = "execution(* ru.t1.java.demo.repository.*.*(..))", throwing = "e")
+    @AfterThrowing(pointcut = "@annotation(ru.t1.java.demo.aop.annotations.LogDataSourceError)", throwing = "e")
     public void logExceptionAnnotation(JoinPoint joinPoint, Exception e) {
         System.err.println("ASPECT EXCEPTION ANNOTATION: Logging exception: {}" + joinPoint.getSignature().getName());
         String signatureName = joinPoint.getSignature().toShortString();

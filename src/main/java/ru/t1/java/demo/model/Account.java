@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Account extends AbstractEntity<Long> {
-    @Column(name = "account_id")
+    @Column(name = "account_id", unique = true)
     @NotNull
     private String accountId;
 
