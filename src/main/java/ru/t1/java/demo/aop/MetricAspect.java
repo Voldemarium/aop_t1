@@ -32,12 +32,10 @@ public class MetricAspect {
     @Around("@annotation(ru.t1.java.demo.aop.annotations.Metric)")
     public Object logExecTime(ProceedingJoinPoint pJoinPoint) throws Throwable {
         log.info("Вызов метода: {}", pJoinPoint.getSignature().getName());
-
         long beforeTime = System.currentTimeMillis();
-        Object result;
+        Object result = null;
         try {
             result = pJoinPoint.proceed();
-        } finally {
             long maxExecutionTime = ((MethodSignature) pJoinPoint.getSignature()).getMethod()
                     .getAnnotation(Metric.class).maxExecutionTime();
             long executionTime = System.currentTimeMillis() - beforeTime;
@@ -51,8 +49,11 @@ public class MetricAspect {
                 kafkaTimeExceededProducer.sendOverMaxExecutionTimeMessage(metricsTopic, message);
                 log.info("Максимальное время {}ms превышено", maxExecutionTime);
             }
+        } catch (Throwable throwable) {
+            log.error(throwable.getMessage());
+        }finally {
+
         }
         return result;
     }
-
 }

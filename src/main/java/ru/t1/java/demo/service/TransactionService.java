@@ -1,5 +1,6 @@
 package ru.t1.java.demo.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class TransactionService {
 
     @LogDataSourceError
     public TransactionDto getTransactionById(Long id) {
-        Transaction entity = repository.findById(id).orElseThrow();
+        Transaction entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapper.toDto(entity);
     }
 

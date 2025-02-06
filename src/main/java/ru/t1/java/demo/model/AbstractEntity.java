@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @MappedSuperclass
 @NoArgsConstructor
-public abstract class AbstractEntity<PK extends Serializable> implements Persistable<PK> {
+public abstract class AbstractEntity<PK> implements Persistable<PK> {
     @Id()
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Nullable

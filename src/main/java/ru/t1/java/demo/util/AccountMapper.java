@@ -34,7 +34,7 @@ public class AccountMapper {
             return null;
         }
         assert account.getId() != null;
-        String clientId = clientService.getClientIdById(account.getId());
+        String clientId = clientService.getClientIdById(account.getClientId());
         return AccountDto.builder()
                 .accountId(account.getAccountId())
                 .clientId(clientId)

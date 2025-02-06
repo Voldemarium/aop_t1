@@ -15,7 +15,7 @@ public class KafkaClientProducer {
     // Метод без передачи топика (берется сконфигурированный топик KafkaTemplate из класс KafkaConfig)
     public void send(String clientId) {
         try {
-            template.sendDefault(UUID.randomUUID().toString(), clientId).get();
+            template.sendDefault(UUID.randomUUID().toString(), clientId);
 
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
@@ -24,19 +24,9 @@ public class KafkaClientProducer {
         }
     }
 
-    // Метод c передачей топика в параметрах ()
-    public void sendTo(String topic, ClientDto o) {
-        try {
-            template.send(topic, o).get();
-            template.flush();
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
-    }
-
     public void sendTo(String topic, String key, ClientDto o) {
         try {
-            template.send(topic, key, o).get();
+            template.send(topic, key, o);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         } finally {

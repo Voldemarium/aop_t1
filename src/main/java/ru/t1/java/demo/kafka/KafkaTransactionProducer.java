@@ -16,7 +16,7 @@ public class KafkaTransactionProducer {
     // Метод без передачи топика (берется сконфигурированный топик KafkaTemplate из класс KafkaConfig)
     public void send(TransactionDto t) {
         try {
-            template.sendDefault(UUID.randomUUID().toString(), t).get();
+            template.sendDefault(UUID.randomUUID().toString(), t);
 
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

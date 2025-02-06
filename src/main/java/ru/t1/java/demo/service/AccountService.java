@@ -1,5 +1,6 @@
 package ru.t1.java.demo.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,21 +21,16 @@ import java.util.Map;
 public class AccountService {
     private final AccountRepository repository;
     private final AccountMapper mapper;
-    private final Map<Long, Account> cache;
 
     @LogDataSourceError
     public AccountDto getAccountDtoById(Long id) {
-        if (cache.containsKey(id)) {
-            return mapper.toDto(cache.get(id));
-        }
-        Account entity = repository.findById(id).orElseThrow();
-        cache.put(id, entity);
+        Account entity = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         return mapper.toDto(entity);
     }
 
     @LogDataSourceError
     public AccountDto getAccountDtoByAccountId(String accountId) {
-        return mapper.toDto(repository.findAccountByAccountId(accountId).orElseThrow());
+        return mapper.toDto(repository.findAccountByAccountId(accountId).orElseThrow(EntityNotFoundException::new));
     }
     
     @LogDataSourceError
@@ -49,12 +45,13 @@ public class AccountService {
 
     @LogDataSourceError
     public Long getIdByAccountId(String accountId) {
-        return repository.findIdByAccountId(accountId).orElseThrow();
+        return repository.findIdByAccountId(accountId)
+                .orElseThrow(EntityNotFoundException::new);
     }
 
     @LogDataSourceError
     public String getAccountIdById(Long id) {
-        return repository.findAccountIdById(id).orElseThrow();
+        return repository.findAccountIdById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @LogDataSourceError

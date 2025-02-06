@@ -23,6 +23,7 @@ import java.util.List;
 public class ClientServiceImpl implements ImplService<Client, ClientDto> {
     private final ClientRepository repository;
     private final KafkaClientProducer kafkaClientProducer;
+    private final ObjectMapper mapper;
 
     @Override
     public void registerEvents(List<Client> clients) {
@@ -42,8 +43,6 @@ public class ClientServiceImpl implements ImplService<Client, ClientDto> {
     @Track
     @HandlingResult
     public List<ClientDto> parseJson() {
-        ObjectMapper mapper = new ObjectMapper();
-
         ClientDto[] clients = new ClientDto[0];
         try {
             clients = mapper.readValue(new File("src/main/resources/MOCK_CLIENT.json"), ClientDto[].class);

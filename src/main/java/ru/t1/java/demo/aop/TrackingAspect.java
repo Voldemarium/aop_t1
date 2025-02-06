@@ -30,12 +30,13 @@ public class TrackingAspect {
     public Object logExecTime(ProceedingJoinPoint pJoinPoint) throws Throwable {
         log.info("Вызов метода: {}", pJoinPoint.getSignature().toShortString());
         long beforeTime = System.currentTimeMillis();
-        Object result;
+        Object result = null;
         try {
             result = pJoinPoint.proceed();//Important
-        }  finally {
             long afterTime = System.currentTimeMillis();
             log.info("Время исполнения: {} ms", (afterTime - beforeTime));
+        } catch (Throwable throwable) {
+            log.error(throwable.getMessage());
         }
         return result;
     }

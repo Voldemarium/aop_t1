@@ -25,6 +25,7 @@ public class TransactionServiceImpl implements ImplService<Transaction, Transact
     private final TransactionRepository repository;
     private final KafkaTransactionProducer kafkaTransactionProducer;
     private final TransactionMapper transactionMapper;
+    private final ObjectMapper mapper;
 
     @Override
     public void registerEvents(List<Transaction> transactions) {
@@ -43,8 +44,6 @@ public class TransactionServiceImpl implements ImplService<Transaction, Transact
     @Track
     @HandlingResult
     public List<TransactionDto> parseJson() {
-        ObjectMapper mapper = new ObjectMapper();
-
         TransactionDto[] transactionDtos = new TransactionDto[0];
         try {
             transactionDtos = mapper.readValue(new File("src/main/resources/MOCK_TRANSACTION.json"),

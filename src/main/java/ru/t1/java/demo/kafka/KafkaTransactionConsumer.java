@@ -8,6 +8,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+import ru.t1.java.demo.exception.TransactionException;
 import ru.t1.java.demo.model.AccountStatus;
 import ru.t1.java.demo.model.TransactionStatus;
 import ru.t1.java.demo.model.dto.AccountDto;
@@ -60,7 +61,7 @@ public class KafkaTransactionConsumer {
                             if (res == 1) {
                                 // отправляет сообщение в топик t1_demo_transaction_accept с информацией
                                 TransactionAcceptDto transactionAcceptDto = TransactionAcceptDto.builder()
-                                        .clientId(clientService.getClientIdById(accountService.getIdByAccountId(accountId)))
+                                        .clientId(accountDto.getClientId())
                                         .accountId(accountId)
                                         .transactionId(transaction.getTransactionId())
                                         .timestamp(transaction.getTimestamp())
@@ -69,6 +70,10 @@ public class KafkaTransactionConsumer {
                                         .build();
                                 transactionAcceptProducer.send(transactionAcceptDto);
                             }
+                        } else {
+                            throw new TransactionException("счет" + accountId +
+                                    "не открыт! Статус:" + accountDto.getStatus() + "!!!, " +
+                                    "транзакция: " + transaction.getTransactionId());
                         }
                     });
         } finally {
