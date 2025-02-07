@@ -1,0 +1,66 @@
+#logger:
+#  enable: true
+logger:
+  enable: true
+  level : INFO
+
+spring:
+  profiles:
+    default: dev
+  application:
+    name: t1-java-demo
+  datasource:
+    username: postgres
+    password: "0000"
+    driverClassName: org.postgresql.Driver
+  liquibase:
+    enabled: true
+    default-schema: t1_demo
+    change-log: db/changelog/db.changelog-master.xml
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+logging:
+  level:
+    ROOT: INFO
+    ru.t1.java.demo.controller.TransactionController: DEBUG
+
+t1:
+  scan-path: ru.t1.java.demo
+  mock_client: "mock/MOCK_CLIENT.json"
+  mock_transaction: "mock/MOCK_TRANSACTION.json"
+  kafka:
+    consumer:
+      trusted_packages : ru.t1.java.demo.model.dto
+      max.poll.records: 1
+      max.poll.interval: 3000
+      session.timeout: 15000
+      max.partition.fetch.bytes: 300000
+      consumer1:
+        group-id: t1-demo
+      consumer2:
+        group-id: t1-demo-account
+      consumer3:
+        group-id: t1-demo-transaction
+      consumer4:
+        group-id: t1-demo-transaction_result
+    producer:
+      enable: true
+    topic:
+      metrics: t1_demo_metrics
+      client_registration: t1_demo_client_registration
+      client_id_registered: t1_demo_client_registered
+      client_accounts: t1_demo_accounts
+      client_transactions: t1_demo_transactions
+      client_transactions_accept: t1_demo_transaction_accept
+      client_transactions_result: t1_demo_transaction_result
+
+    listener:
+      poll-timeout: 1000
+
+
+

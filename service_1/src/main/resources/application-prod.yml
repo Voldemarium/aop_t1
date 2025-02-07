@@ -1,0 +1,13 @@
+server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/t1_demo
+
+t1:
+  kafka:
+    bootstrap:
+      server:  ${KAFKA_SERVER:broker_t1:29092}
+
+
+
