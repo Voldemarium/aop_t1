@@ -1,0 +1,11 @@
+
+t1:
+  scan-path: ru.t1.java.demo
+  kafka:
+    bootstrap:
+       server:  ${KAFKA_SERVER:localhost:9092}
+
+
+
+
+

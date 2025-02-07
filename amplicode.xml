@@ -3,9 +3,9 @@
   <component name="AmplicodeJpaPluginProjectSettings" dtoSerializableType="0" />
   <component name="AmplicodePersistenceUnitSettings">
     <persistence-units>
-      <persistence-unit name="Default">
+      <persistence-unit moduleName="service_1" name="Default">
         <packages>
-          <package value="ru.t1.java.demo" />
+          <package value="ru.t1.java.service_1" />
         </packages>
       </persistence-unit>
     </persistence-units>

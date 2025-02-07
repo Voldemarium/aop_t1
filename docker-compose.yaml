@@ -1,0 +1,10 @@
+services:
+  service_1:
+    image: service_1:latest
+    build: service_1
+    restart: "no"
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      KAFKA_SERVER: broker_t1:29092
